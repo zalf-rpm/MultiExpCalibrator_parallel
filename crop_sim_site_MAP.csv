@@ -1,0 +1,10 @@
+exp_ID,sim file,crop file,site file,climate file,species params,cv params,position in rotation *,crop ID (as in crop.json)
+10,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C01R1.csv,wheat.json,winter wheat.json,0,WW
+11,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C01R2.csv,wheat.json,winter wheat.json,0,WW
+12,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C01R3.csv,wheat.json,winter wheat.json,0,WW
+13,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C02R1.csv,wheat.json,winter wheat.json,0,WW
+14,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C02R2.csv,wheat.json,winter wheat.json,0,WW
+15,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C02R3.csv,wheat.json,winter wheat.json,0,WW
+16,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C03R1.csv,wheat.json,winter wheat.json,0,WW
+17,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C03R2.csv,wheat.json,winter wheat.json,0,WW
+18,sim.json,crop-WW.json,21589.json,daily_mean_P0_RES100_C03R3.csv,wheat.json,winter wheat.json,0,WW
