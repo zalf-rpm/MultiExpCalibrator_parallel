@@ -1,2 +1,4 @@
 name,position in array,low,high,stepsize,optguess,minbound,maxbound
-StageTemperatureSum,1,200,450,10,300,200,450
+OptimumTemperatureForAssimilation,FALSE,25,31,1,29,25,31
+MinimumTemperatureForAssimilation,FALSE,6,10,1,8,4,10
+MaximumTemperatureForAssimilation,FALSE,35,42,1,38,35,42

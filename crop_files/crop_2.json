@@ -1,0 +1,163 @@
+  {
+    "crops": {
+        "GM_300": {
+            "cropParams": {
+                "species": ["include-from-file", "monica-parameters/crops/maize_PD.json"],
+                "cultivar": ["include-from-file", "monica-parameters/crops/maize/grain maize_PD_300.json"]
+            },
+            "residueParams": ["include-from-file", "monica-parameters/crop-residues/maize.json"]
+        },
+        "GM_600": {
+            "cropParams": {
+                "species": ["include-from-file", "monica-parameters/crops/maize_PD.json"],
+                "cultivar": ["include-from-file", "monica-parameters/crops/maize/grain maize_PD_600.json"]
+            },
+            "residueParams": ["include-from-file", "monica-parameters/crop-residues/maize.json"]
+        }
+    },
+    
+    "fert-params": {
+        "urea": ["include-from-file", "monica-parameters/mineral-fertilisers/U.json"],
+        "manure": {
+            "DEFAULT": ["include-from-file", "monica-parameters/organic-fertilisers/CAM.json"],
+            "AOM_DryMatterContent": 0.84
+        },
+        "slurry": {
+            "DEFAULT": ["include-from-file", "monica-parameters/organic-fertilisers/CAS.json"],
+            "AOM_DryMatterContent": 0.08
+        },
+        "manure_2": {
+            "DEFAULT": ["include-from-file", "monica-parameters/organic-fertilisers/CAM.json"],
+            "AOM_DryMatterContent": 0.84,
+            "AOM_NH4Content": 0,
+            "CN_Ratio_AOM_Fast": 13,
+            "CN_Ratio_AOM_Slow": 13
+        }
+    }, 
+
+    "cropRotation": [
+            {
+                "worksteps": [
+                    { "date": "2011-06-29", "type": "SetValue", "var": ["Mois", [1,9]], "value": 0.135 },
+                    { "date": "2011-06-29", "type": "Seed", "crop": ["ref", "crops", "GM_300"] },
+                    {
+                        "date": "2011-06-29",
+                        "type": "OrganicFertiliserApplication",
+                        "amount": [250, "kg N"],
+                        "parameters": ["ref", "fert-params", "manure"],
+                        "incorporation": true
+				    },
+                    {
+                        "date": "2011-06-29",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [47, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    {
+                        "date": "2011-08-05",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [71, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    { "date": "2011-10-20", "type": "Harvest"}
+                ]
+            },
+            {
+                "worksteps": [
+                    { "date": "2012-05-02", "type": "Seed", "crop": ["ref", "crops", "GM_600"] },
+                    {
+                        "date": "2012-05-02",
+                        "type": "OrganicFertiliserApplication",
+                        "amount": [250, "kg N"],
+                        "parameters": ["ref", "fert-params", "manure"],
+                        "incorporation": true
+				    },
+                    {
+                        "date": "2012-05-02",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [47, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    {
+                        "date": "2012-05-29",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [35.5, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    {
+                        "date": "2012-06-18",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [35.5, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    { "date": "2012-09-03", "type": "Harvest"}
+                ]
+            },
+            {
+                "worksteps": [
+                    { "date": "2013-05-15", "type": "Seed", "crop": ["ref", "crops", "GM_600"] },
+                    {
+                        "date": "2013-05-15",
+                        "type": "OrganicFertiliserApplication",
+                        "amount": [250, "kg N"],
+                        "parameters": ["ref", "fert-params", "slurry"],
+                        "incorporation": true
+				    },
+                    {
+                        "date": "2013-05-15",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [47, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    {
+                        "date": "2013-06-11",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [35.5, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    {
+                        "date": "2013-06-26",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [35.5, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    { "date": "2013-09-30", "type": "Harvest"}
+                ]
+            },
+            {
+                "worksteps": [
+                    { "date": "2014-04-22", "type": "Seed", "crop": ["ref", "crops", "GM_600"] },
+                    {
+                        "date": "2014-04-22",
+                        "type": "OrganicFertiliserApplication",
+                        "amount": [250, "kg N"],
+                        "parameters": ["ref", "fert-params", "slurry"],
+                        "incorporation": true
+				    },
+                    {
+                        "date": "2014-04-22",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [47, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    {
+                        "date": "2014-05-27",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [35.5, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    {
+                        "date": "2014-06-26",
+                        "type": "MineralFertiliserApplication",
+                        "amount": [35.5, "kg N"],
+                        "partition": ["ref", "fert-params", "urea"]
+                    },
+                    { "date": "2014-09-10", "type": "Harvest"}
+                ]
+            }
+        ],
+
+    "CropParameters": {
+        "DEFAULT": ["include-from-file", "monica-parameters/user-parameters/hermes-crop.json"]
+    }
+}

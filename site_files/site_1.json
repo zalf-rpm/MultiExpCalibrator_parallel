@@ -1,0 +1,35 @@
+{
+  "SiteParameters": {
+    "Latitude": 45.56666,
+    "Slope": 0,
+    "HeightNN": [0 , "m"],
+    "NDeposition": 0,
+		
+    "SoilProfileParameters": [
+			{
+				"Thickness": [1.05, "m"],
+				"PermanentWiltingPoint": [0.11, "m3 m-3"],
+				"FieldCapacity": [0.30, "m3 m-3"],
+				"PoreVolume": [0.44, "m3 m-3"],
+				"Clay": [0.18, "% [0-1]"],
+				"Sand": [0.20, "% [0-1]"],
+				"Sceleton": 0,
+				"SoilBulkDensity": [1410, "kg m-3"],
+				"SoilOrganicCarbon": [0.75, "%"],
+				"pH": 8.1
+			}
+		]
+  },
+	
+	"SoilTemperatureParameters": ["include-from-file", "monica-parameters/user-parameters/hermes-soil-temperature.json"],
+ 
+	"EnvironmentParameters": {
+    	"DEFAULT": ["include-from-file", "monica-parameters/user-parameters/hermes-environment.json"],
+    	"LeachingDepth": 1.5,
+    	"WindSpeedHeight": 2.5
+  	},
+	
+	"SoilOrganicParameters": ["include-from-file", "monica-parameters/user-parameters/hermes-soil-organic.json"],
+	"SoilTransportParameters": ["include-from-file", "monica-parameters/user-parameters/hermes-soil-transport.json"],
+	"SoilMoistureParameters": ["include-from-file", "monica-parameters/user-parameters/hermes-soil-moisture.json"]
+}

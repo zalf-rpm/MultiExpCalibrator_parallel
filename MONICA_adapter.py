@@ -127,10 +127,8 @@ class monica_adapter(object):
                             #for maize only (while calibrating TSUM1):
                             #cultivar[par_name][0][2] = vector[i] * 0.290666667
                             #cultivar[par_name][0][3] = vector[i] * 0.333333333
-                            #cultivar[par_name][0][5] = vector[i] * 0.533333333
-                            #for WW only (while calibrating TSUM1):
-                            cultivar[par_name][0][2] = vector[i] * 1.338028169
-                            cultivar[par_name][0][4] = vector[i] * 1.478873239
+                            #cultivar[par_name][0][4] = vector[i] * 0.266666666
+                            #cultivar[par_name][0][5] = vector[i] * 0.533333333                            
                         else:
                             cultivar[par_name][int(arr_index)] = vector[i]
                 else:

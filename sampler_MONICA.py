@@ -71,6 +71,11 @@ with open('observations.csv') as obsfile:
             record["value"] = float(row[5])
             obslist.append(record) #TODO:Add weight here?
 
+#order obslist by exp_id to avoid mismatch between observation/evaluation lists
+def getKey(record):
+    return record["exp_ID"]
+obslist = sorted(obslist, key=getKey)
+
 #read params to be calibrated
 params = []
 with open('calibratethese.csv') as paramscsv:
@@ -89,7 +94,7 @@ with open('calibratethese.csv') as paramscsv:
         params.append(p)
 
 spot_setup = spotpy_setup_MONICA.spot_setup(params, exp_maps, obslist)
-rep = 5
+rep = 50
 results = []
 
 sampler = spotpy.algorithms.sceua(spot_setup, dbname='SCEUA', dbformat='ram')

@@ -1,1 +1,3 @@
-StageTemperatureSum1,308.57792602459119
+OptimumTemperatureForAssimilation,25.340454373606384
+MinimumTemperatureForAssimilation,6.4809065408663535
+MaximumTemperatureForAssimilation,41.099015558704252

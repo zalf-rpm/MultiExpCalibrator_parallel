@@ -1,0 +1,57 @@
+{
+	"crop.json": "crop_2.json",
+	"site.json": "site_2.json",
+	"climate.csv": "climate_padova.csv",
+
+	"climate.csv-options": {
+		"start-date": "2011-06-28",
+		"end-date": "2014-12-31",
+
+		"no-of-climate-file-header-lines": 1,
+		"csv-separator": ",",
+		"header-to-acd-names": {}		
+	},
+	
+	"debug?": false,
+	"path-to-output": "./",
+	"include-file-base-path": "../",
+	
+	"output": { 
+	  "write-file?": true,
+		"file-name": "out_exp2.csv",
+	
+		"csv-options": {
+			"include-header-row": true,
+			"include-units-row": true,
+			"csv-separator": ","
+		},
+
+		"events": [
+			
+		]
+	},
+
+	"NumberOfLayers": 20,
+	"LayerThickness": [0.1, "m"],
+
+	"UseSecondaryYields": false,
+	"NitrogenResponseOn": true,
+	"WaterDeficitResponseOn": true,
+	"EmergenceMoistureControlOn": false,
+	"EmergenceFloodingControlOn": false,
+
+	"UseAutomaticIrrigation": false,
+	"AutoIrrigationParams": {
+		"irrigationParameters": {
+			"nitrateConcentration": [0, "mg dm-3"],
+			"sulfateConcentration": [0, "mg dm-3"]
+		},
+		"amount": [0, "mm"],
+		"threshold": 0.9
+	},
+
+	"UseNMinMineralFertilisingMethod": false,
+	"NMinUserParams": { "min": 40, "max": 120, "delayInDays": 10 },
+	"NMinFertiliserPartition": ["include-from-file", "monica-parameters/mineral-fertilisers/AN.json"],
+	"JulianDayAutomaticFertilising": 89
+}
