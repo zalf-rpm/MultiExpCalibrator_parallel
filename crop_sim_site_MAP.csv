@@ -1,3 +1,3 @@
 exp_ID,sim file,crop file,site file,climate file,species params,cv params,position in rotation *,crop ID (as in crop.json)
-1,sim_1.json,crop_1.json,site_1.json,climate_padova.csv,maize_PD.json,grain maize_PD_300.json,0,GM_300
-2,sim_2.json,crop_2.json,site_2.json,climate_padova.csv,maize_PD.json,grain maize_PD_300.json,0,GM_300
+3,sim_1.json,crop_1.json,site_1.json,climate_padova.csv,maize_PD.json,grain maize_PD_600.json,1-2-3,GM_600
+4,sim_2.json,crop_2.json,site_2.json,climate_padova.csv,maize_PD.json,grain maize_PD_600.json,1-2-3,GM_600

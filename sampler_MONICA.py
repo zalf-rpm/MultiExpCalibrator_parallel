@@ -16,7 +16,7 @@ font = {'family' : 'calibri',
 def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='Date'):
     import matplotlib.pyplot as plt
     from matplotlib import colors
-    cnames = list(colors.cnames)
+    #cnames = list(colors.cnames)
 
     plt.rc('font', **font)
     colors = ['grey', 'black', 'brown', 'red', 'orange', 'yellow', 'green', 'blue']
@@ -29,7 +29,8 @@ def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='
     for exp in experiments:
         RMSE = spotpy.objectivefunctions.rmse(experiments[exp]["obs"], experiments[exp]["sims"])
         axarr[i].plot(experiments[exp]["dates"], experiments[exp]["obs"], 'ro', markersize=10, label='obs data')
-        axarr[i].plot(experiments[exp]["dates"], experiments[exp]["sims"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 2)))
+        #axarr[i].plot(experiments[exp]["dates"], experiments[exp]["sims"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 2)))
+        axarr[i].plot(experiments[exp]["all_dates"], experiments[exp]["daily"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 2)))
         axarr[i].legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
         #axarr[i].set_title(str(exp))
         i +=1
@@ -94,7 +95,7 @@ with open('calibratethese.csv') as paramscsv:
         params.append(p)
 
 spot_setup = spotpy_setup_MONICA.spot_setup(params, exp_maps, obslist)
-rep = 50
+rep = 10
 results = []
 
 sampler = spotpy.algorithms.sceua(spot_setup, dbname='SCEUA', dbformat='ram')
@@ -109,7 +110,7 @@ with open('optimizedparams.csv', 'wb') as outcsvfile:
     for i in range(len(best)):
         outrow=[]
         arr_pos = ""
-        if params[i]["array"] != "FALSE":
+        if params[i]["array"].upper() != "FALSE":
             arr_pos = params[i]["array"]        
         outrow.append(params[i]["name"]+arr_pos)
         outrow.append(best[i])
@@ -127,6 +128,11 @@ bestmodelrun=list(spotpy.analyser.get_modelruns(results[i])[index][0]) #Transfor
 obs_dates = spot_setup.evaluation(get_dates_dict=True)
 obs_values = spot_setup.evaluation(get_values_dict=True)
 
+#Run with optimized params
+print("running simulations with optimized params")
+spot_setup = spotpy_setup_MONICA.spot_setup(params, exp_maps, obslist, True)
+daily_out = spot_setup.simulation(best, True)
+
 #retrieve info for plots
 for variable in obs_dates:
     exps = {}
@@ -143,6 +149,8 @@ for variable in obs_dates:
         exps[experiment]["dates"] = dates
         exps[experiment]["sims"] = sims
         exps[experiment]["obs"] = obs
+        exps[experiment]["daily"] = daily_out[int(experiment)][variable]
+        exps[experiment]["all_dates"] = daily_out[int(experiment)]["Date"]
     produce_plot(exps,variable)
 
 

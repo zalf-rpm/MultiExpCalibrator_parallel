@@ -8,7 +8,7 @@ import MONICA_adapter
 import re
 
 class spot_setup(object):
-    def __init__(self, user_params, exp_maps, obslist):
+    def __init__(self, user_params, exp_maps, obslist, finalrun=False):
         self.user_params = user_params
         self.params = []
         for par in user_params:
@@ -16,14 +16,14 @@ class spot_setup(object):
             if re.search(r'\d', par["array"]): #check if par["array"] contains numbers
                 parname += "_" + par["array"] #spotpy does not allow two parameters to have the same name
             self.params.append(spotpy.parameter.Uniform(parname, par["low"], par["high"], par["stepsize"], par["optguess"], par["minbound"], par["maxbound"]))
-        self.monica_model = MONICA_adapter.monica_adapter(exp_maps, obslist)
+        self.monica_model = MONICA_adapter.monica_adapter(exp_maps, obslist, finalrun)
 
     def parameters(self):
         return spotpy.parameter.generate(self.params)
 
-    def simulation(self,vector):
+    def simulation(self, vector, finalrun = False):
         #the vector comes from spotpy, self.user_params holds the information coming from csv file
-        simulations= self.monica_model._run(vector, self.user_params)
+        simulations= self.monica_model._run(vector, self.user_params, finalrun)
         return simulations
 
     def evaluation(self, get_dates_dict=False, get_values_dict=False):
