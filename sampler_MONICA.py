@@ -30,10 +30,24 @@ def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='
         RMSE = spotpy.objectivefunctions.rmse(experiments[exp]["obs"], experiments[exp]["sims"])
         axarr[i].plot(experiments[exp]["dates"], experiments[exp]["obs"], 'ro', markersize=10, label='obs data')
         #axarr[i].plot(experiments[exp]["dates"], experiments[exp]["sims"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 2)))
-        axarr[i].plot(experiments[exp]["all_dates"], experiments[exp]["daily"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 2)))
+        axarr[i].plot(experiments[exp]["all_dates"], experiments[exp]["daily"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 3)))
         axarr[i].legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
         #axarr[i].set_title(str(exp))
-        i +=1
+        i +=1         
+        #for testing: delete from here
+        #csv_name = exp + " " + variable + ".csv"
+        #with open(csv_name, 'wb') as outcsvtest:
+        #    writer = csv.writer(outcsvtest)
+        #    writer.writerow([str("dates")])
+        #    for date in experiments[exp]["dates"]:
+        #        writer.writerow([str(date.year) + "-" + str(date.month) + "-" + str(date.day)])
+        #    writer.writerow(["obs"])
+        #    for ob in experiments[exp]["obs"]:
+        #        writer.writerow([str(ob)])
+        #    writer.writerow(["sims"])
+        #    for sim in experiments[exp]["sims"]:
+        #        writer.writerow([str(sim)])
+        #delete to here
     filename = variable + '.png'
     f.savefig(filename)
     text = 'A figure has been saved as ' + filename

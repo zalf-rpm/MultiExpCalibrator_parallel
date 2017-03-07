@@ -47,6 +47,7 @@
                         "parameters": ["ref", "fert-params", "manure"],
                         "incorporation": true
 				    },
+                    { "date": "2011-06-29", "type": "TillageApplication", "depth": [0.1, "m"] },
                     {
                         "date": "2011-06-29",
                         "type": "MineralFertiliserApplication",
@@ -72,6 +73,7 @@
                         "parameters": ["ref", "fert-params", "manure"],
                         "incorporation": true
 				    },
+                    { "date": "2012-05-02", "type": "TillageApplication", "depth": [0.1, "m"] },
                     {
                         "date": "2012-05-02",
                         "type": "MineralFertiliserApplication",
@@ -103,6 +105,7 @@
                         "parameters": ["ref", "fert-params", "slurry"],
                         "incorporation": true
 				    },
+                    { "date": "2013-05-15", "type": "TillageApplication", "depth": [0.1, "m"] },
                     {
                         "date": "2013-05-15",
                         "type": "MineralFertiliserApplication",
@@ -134,6 +137,7 @@
                         "parameters": ["ref", "fert-params", "slurry"],
                         "incorporation": true
 				    },
+                    { "date": "2014-04-22", "type": "TillageApplication", "depth": [0.1, "m"] },
                     {
                         "date": "2014-04-22",
                         "type": "MineralFertiliserApplication",

@@ -28,16 +28,22 @@ class monica_adapter(object):
         self.obsdict = {} #for plotting outputs
         i = 0 #i is a reference to match the element in result array (from spotpy)
         for record in obslist:
+            var_name = record["variable"]
+            if "aggregation" in record.keys():
+                #for plotting purposes the variable name must be unique (and match variable in collect results method)
+                fromL = str(record["aggregation"][1][0])
+                toL = str(record["aggregation"][1][1])
+                var_name += " " + fromL + " to " + toL 
             self.observations.append(record["value"])
-            if record["variable"] not in self.evaluationdates: #add the variable as a key
-                self.evaluationdates[record["variable"]] = {}
-                self.obsdict[record["variable"]] = {}
-            if record["exp_ID"] not in self.evaluationdates[record["variable"]]: #add the experiment as a key
-                self.evaluationdates[record["variable"]][record["exp_ID"]] = []
-                self.obsdict[record["variable"]][record["exp_ID"]] = []
+            if var_name not in self.evaluationdates: #add the variable as a key
+                self.evaluationdates[var_name] = {}
+                self.obsdict[var_name] = {}
+            if record["exp_ID"] not in self.evaluationdates[var_name]: #add the experiment as a key
+                self.evaluationdates[var_name][record["exp_ID"]] = []
+                self.obsdict[var_name][record["exp_ID"]] = []
             thisdate = record["date"].split("-")#self.evaluationdates needs a date type (not isoformat)
-            self.evaluationdates[record["variable"]][record["exp_ID"]].append([i, date(int(thisdate[0]), int(thisdate[1]), int(thisdate[2]))])
-            self.obsdict[record["variable"]][record["exp_ID"]].append([i, record["value"]])
+            self.evaluationdates[var_name][record["exp_ID"]].append([i, date(int(thisdate[0]), int(thisdate[1]), int(thisdate[2]))])
+            self.obsdict[var_name][record["exp_ID"]].append([i, record["value"]])
             i += 1
 
         self.species_params={} #map to store different species params sets avoiding repetition
@@ -86,7 +92,8 @@ class monica_adapter(object):
                         var = [unicode(record["variable"])]
                         if "aggregation" in record.keys():
                             var = record["aggregation"]
-                        env["events"][1].append(var)
+                        if var not in env["events"][1]: #avoid to ask twice the same var as out
+                            env["events"][1].append(var)
 
             position = int(exp_map["where_in_rotation"][0])
 
@@ -206,12 +213,19 @@ class monica_adapter(object):
             elif finalrun:
                 self.out[int(rec_msg["customId"])] = {}
                 indexes_variables = []
+                indexes_layeraggr =[]
                 outputIds = rec_msg["data"][0]["outputIds"]
                 for index in range(len(outputIds)):
                     indexes_variables.append(outputIds[index]["name"])
+                    fromL_toL = [] #store info about out aggregation
+                    fromL_toL.append(outputIds[index]["fromLayer"] + 1)
+                    fromL_toL.append(outputIds[index]["toLayer"] + 1)
+                    indexes_layeraggr.append(fromL_toL)
                 results = rec_msg["data"][0]["results"]
                 for res in range(len(results)):
                     variable = indexes_variables[res]
+                    if indexes_layeraggr[res][0] != indexes_layeraggr[res][1]: #out is aggregated
+                        variable += " " + str(indexes_layeraggr[res][0]) + " to " + str(indexes_layeraggr[res][1])
                     daily_out = results[res]
                     if variable == "Date":
                         for t in range(len(daily_out)):
