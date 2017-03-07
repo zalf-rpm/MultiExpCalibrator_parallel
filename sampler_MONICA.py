@@ -70,6 +70,15 @@ with open('observations.csv') as obsfile:
             record["date"] = date(int(row[1]), int(row[2]), int(row[3])).isoformat()
             record["variable"] = row[4]
             record["value"] = float(row[5])
+            if row[8] != "":
+                aggregation = []
+                nested_arr=[]
+                nested_arr.append(int(row[8]))
+                nested_arr.append(int(row[9]))
+                nested_arr.append(unicode(row[10].upper()))
+                aggregation.append(unicode(row[4]))               
+                aggregation.append(nested_arr)
+                record["aggregation"] = aggregation
             obslist.append(record) #TODO:Add weight here?
 
 #order obslist by exp_id to avoid mismatch between observation/evaluation lists
@@ -134,6 +143,7 @@ spot_setup = spotpy_setup_MONICA.spot_setup(params, exp_maps, obslist, True)
 daily_out = spot_setup.simulation(best, True)
 
 #retrieve info for plots
+print("preparing charts...")
 for variable in obs_dates:
     exps = {}
     for experiment in obs_dates[variable]:

@@ -68,19 +68,24 @@ class monica_adapter(object):
             })
 
             #add required outputs
-            
             for record in obslist:
                 if record["exp_ID"] == exp_map["exp_ID"]:
                     if not finalrun: #output only info required by spotpy
-                        env["events"].append(unicode(record["date"]))
+                        env["events"].append(unicode(record["date"]))                        
                         var = [unicode(record["variable"])]
+                        if "aggregation" in record.keys():
+                            var = []
+                            var.append(record["aggregation"])                            
                         env["events"].append(var) #TODO:Add weight here?
+
                     elif finalrun: #daily output for plots
                         if "daily" not in env["events"]:
                             env["events"].append(unicode("daily"))
                             env["events"].append([]) #empty list of daily variables
                             env["events"][1].append(unicode("Date"))
                         var = [unicode(record["variable"])]
+                        if "aggregation" in record.keys():
+                            var = record["aggregation"]
                         env["events"][1].append(var)
 
             position = int(exp_map["where_in_rotation"][0])

@@ -70,7 +70,7 @@
 	],
 	"CropHeightP1": 9,
 	"CropHeightP2": 0.3499999940395355,
-	"CropSpecificMaxRootingDepth": 0.5,
+	"CropSpecificMaxRootingDepth": 1.5,
 	"CultivarName": "silage maize",
 	"DaylengthRequirement": [
 		[
@@ -206,11 +206,11 @@
 	"StageTemperatureSum": [
 		[
 			68,
-			959,
-			279,
-			320,
-			200,
-			512,
+			845,
+			246,
+			282,
+			225,
+			451,
 			25
 		],
 		"�C d"
