@@ -124,6 +124,9 @@ class monica_adapter(object):
         #set params according to spotpy sampling. Update all the species/cultivar available
         for i in range(len(vector)):                        #loop on the vector
             par_name = user_params[i]["name"]
+            if par_name == "N2OProductionRate":#even more q&d way to change params not in crop params files
+                    for env in self.envs:
+                        env["params"]["userSoilOrganicParameters"]["N2OProductionRate"][0] = vector[i]
             for s in self.species_params:                   #loop on the species
                 species = self.species_params[s]
                 if par_name in species.keys():              #check for parameter existence in the dict
@@ -154,6 +157,8 @@ class monica_adapter(object):
                             cultivar[par_name][int(arr_index)] = vector[i]
                 else:
                     break
+                
+
 
         #launch parallel thread for the collector
         collector = Thread(target=self.collect_results, kwargs={'finalrun': finalrun})
@@ -224,7 +229,7 @@ class monica_adapter(object):
                 results = rec_msg["data"][0]["results"]
                 for res in range(len(results)):
                     variable = indexes_variables[res]
-                    if indexes_layeraggr[res][0] != indexes_layeraggr[res][1]: #out is aggregated
+                    if indexes_layeraggr[res][0] != 0: #for variables related to soil layers
                         variable += " " + str(indexes_layeraggr[res][0]) + " to " + str(indexes_layeraggr[res][1])
                     daily_out = results[res]
                     if variable == "Date":
