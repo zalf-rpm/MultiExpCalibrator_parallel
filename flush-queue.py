@@ -22,7 +22,7 @@ import sys
 import zmq
 #print "pyzmq version: ", zmq.pyzmq_version(), " zmq version: ", zmq.zmq_version()
 
-LOCAL_RUN = True
+LOCAL_RUN = False
 
 def main():
     "simply empty queue"
@@ -30,15 +30,14 @@ def main():
     context = zmq.Context()
     socket = context.socket(zmq.PULL)
     if LOCAL_RUN:
-        socket.connect("tcp://localhost:6666")
+        socket.connect("tcp://localhost:7777")
     else:
         socket.connect("tcp://cluster2:7777")
 
     i = 0
     while True:
         socket.recv_json(encoding="latin-1")
-        if i % 1 == 0:
-            print ".",
+        print i,
         i = i + 1
 
 main()

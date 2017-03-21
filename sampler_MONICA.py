@@ -104,7 +104,7 @@ with open('calibratethese.csv') as paramscsv:
         params.append(p)
 
 spot_setup = spotpy_setup_MONICA.spot_setup(params, exp_maps, obslist)
-rep = 5
+rep = 20
 results = []
 
 sampler = spotpy.algorithms.sceua(spot_setup, dbname='SCEUA', dbformat='ram')

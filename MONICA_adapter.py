@@ -94,7 +94,7 @@ class monica_adapter(object):
                             var = record["aggregation"]
                         if var not in env["events"][1]: #avoid to ask twice the same var as out
                             env["events"][1].append(var)
-
+                            
             position = int(exp_map["where_in_rotation"][0])
 
             for ws in env["cropRotation"][position]["worksteps"]:
@@ -110,8 +110,8 @@ class monica_adapter(object):
 
         self.context = zmq.Context()
         self.socket_producer = self.context.socket(zmq.PUSH)
-        #self.socket_producer.connect("tcp://cluster2:6666")
-        self.socket_producer.connect("tcp://localhost:6666")
+        self.socket_producer.connect("tcp://cluster2:6666")
+        #self.socket_producer.connect("tcp://localhost:6666")
 
     def run(self,args):
         return self._run(*args)
@@ -124,9 +124,6 @@ class monica_adapter(object):
         #set params according to spotpy sampling. Update all the species/cultivar available
         for i in range(len(vector)):                        #loop on the vector
             par_name = user_params[i]["name"]
-            if par_name == "N2OProductionRate":#even more q&d way to change params not in crop params files
-                    for env in self.envs:
-                        env["params"]["userSoilOrganicParameters"]["N2OProductionRate"][0] = vector[i]
             for s in self.species_params:                   #loop on the species
                 species = self.species_params[s]
                 if par_name in species.keys():              #check for parameter existence in the dict
@@ -199,8 +196,8 @@ class monica_adapter(object):
 
     def collect_results(self, finalrun):
         socket_collector = self.context.socket(zmq.PULL)
-        #socket_collector.connect("tcp://cluster2:7777")
-        socket_collector.connect("tcp://localhost:7777")
+        socket_collector.connect("tcp://cluster2:7777")
+        #socket_collector.connect("tcp://localhost:7777")
         received_results = 0
         leave = False
         while not leave:
@@ -214,8 +211,10 @@ class monica_adapter(object):
                 for res in rec_msg["data"]:
                     results_rec.append(res["results"][0][0])
                 self.out[int(rec_msg["customId"])] = results_rec
+                #print (rec_msg["customId"], results_rec)
 
             elif finalrun:
+                #print rec_msg["customId"]
                 self.out[int(rec_msg["customId"])] = {}
                 indexes_variables = []
                 indexes_layeraggr =[]
