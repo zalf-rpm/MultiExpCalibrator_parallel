@@ -8,14 +8,14 @@ import spotpy_setup_MONICA
 import csv
 from datetime import date
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import colors
 
 font = {'family' : 'calibri',
     'weight' : 'normal',
     'size'   : 18}
 
-def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='Date'):
-    import matplotlib.pyplot as plt
-    from matplotlib import colors
+def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='Date'):    
     #cnames = list(colors.cnames)
 
     plt.rc('font', **font)
@@ -28,7 +28,7 @@ def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='
     i=0
     for exp in experiments:
         RMSE = spotpy.objectivefunctions.rmse(experiments[exp]["obs"], experiments[exp]["sims"])
-        axarr[i].plot(experiments[exp]["dates"], experiments[exp]["obs"], 'ro', markersize=10, label='obs data')
+        axarr[i].plot(experiments[exp]["dates"], experiments[exp]["obs"], 'ro', markersize=8, label='obs data')
         #axarr[i].plot(experiments[exp]["dates"], experiments[exp]["sims"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 2)))
         axarr[i].plot(experiments[exp]["all_dates"], experiments[exp]["daily"],'-', color=colors[7], linewidth=2, label='exp ' + exp + ': RMSE=' + str(round(RMSE, 3)))
         axarr[i].legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
@@ -83,7 +83,7 @@ with open('observations.csv') as obsfile:
 
 #order obslist by exp_id to avoid mismatch between observation/evaluation lists
 def getKey(record):
-    return record["exp_ID"]
+    return int(record["exp_ID"])
 obslist = sorted(obslist, key=getKey)
 
 #read params to be calibrated
@@ -104,7 +104,7 @@ with open('calibratethese.csv') as paramscsv:
         params.append(p)
 
 spot_setup = spotpy_setup_MONICA.spot_setup(params, exp_maps, obslist)
-rep = 10
+rep = 5
 results = []
 
 sampler = spotpy.algorithms.sceua(spot_setup, dbname='SCEUA', dbformat='ram')
@@ -162,6 +162,8 @@ for variable in obs_dates:
         exps[experiment]["daily"] = daily_out[int(experiment)][variable]
         exps[experiment]["all_dates"] = daily_out[int(experiment)]["Date"]
     produce_plot(exps,variable)
+
+    print("finished!")
 
 
 

@@ -98,7 +98,7 @@ class monica_adapter(object):
             position = int(exp_map["where_in_rotation"][0])
 
             for ws in env["cropRotation"][position]["worksteps"]:
-                if ws["type"] == "Seed":
+                if ws["type"] == "Seed" or ws["type"] == "Sowing":
                     self.species_params[exp_map["species_file"]] = ws["crop"]["cropParams"]["species"]
                     self.cultivar_params[exp_map["cultivar_file"]] = ws["crop"]["cropParams"]["cultivar"]
                     break
@@ -173,7 +173,7 @@ class monica_adapter(object):
             for crop_to_cal in env["where_in_rotation"]:
             #if the crop appears more than once in the rotation, the same params will be set
                 for ws in env["cropRotation"][int(crop_to_cal)]["worksteps"]:
-                    if ws["type"] == "Seed":
+                    if ws["type"] == "Seed" or ws["type"] == "Sowing":
                         ws["crop"]["cropParams"]["species"] = species
                         ws["crop"]["cropParams"]["cultivar"] = cultivar
                         break
