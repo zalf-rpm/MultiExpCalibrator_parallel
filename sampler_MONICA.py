@@ -150,6 +150,13 @@ for i in range(len(results)):
 
 bestmodelrun=list(spotpy.analyser.get_modelruns(results[i])[index][0]) #Transform values into list to ensure plotting
 
+#de-normalize best run 
+normalize = spot_setup.monica_model.normalize
+for anorm in normalize:
+    n_factor = normalize[anorm]["max_obs_value"] / 100
+    for jjj in normalize[anorm]["where"]:
+        bestmodelrun[jjj] *= n_factor
+
 obs_dates = spot_setup.evaluation(get_dates_dict=True)
 obs_values = spot_setup.evaluation(get_values_dict=True)
 
