@@ -1,4 +1,2 @@
 exp_ID,sim file,crop file,site file,climate file,species params,cv params,position in rotation *,crop ID (as in crop.json)
 48,sim_WW_Samanta_DOM_2006.json,crop_WW_Samanta_DOM_2006.json,dom.json,dom.csv,wheat_CZ.json,winter wheat_CZ.json,0,WW
-49,sim_WW_Samanta_DOM_2007.json,crop_WW_Samanta_DOM_2007.json,dom.json,dom.csv,wheat_CZ.json,winter wheat_CZ.json,0,WW
-50,sim_WW_Samanta_DOM_2008.json,crop_WW_Samanta_DOM_2008.json,dom.json,dom.csv,wheat_CZ.json,winter wheat_CZ.json,0,WW

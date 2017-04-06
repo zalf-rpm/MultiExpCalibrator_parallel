@@ -50,6 +50,26 @@ class monica_adapter(object):
             self.obsdict[var_name][record["exp_ID"]].append([i, record["value"]])
             i += 1
 
+        #normalization data structure
+        self.normalize= defaultdict(lambda: defaultdict(dict))
+        for var in self.obsdict:
+            var_indexes = []
+            self.normalize[var]["max_obs_value"] = 0.01
+            for exp_id in self.obsdict[var]:
+                inds_values = self.obsdict[var][exp_id]
+                for index_value in inds_values:
+                    var_indexes.append(index_value[0]) #index in evallist
+                    self.normalize[var]["max_obs_value"] = max(self.normalize[var]["max_obs_value"], index_value[1]) #max observed value
+                    if "aggregation" in obslist[index_value[0]]: #for layer outputs
+                        self.normalize[var]["aggregation"] = obslist[index_value[0]]["aggregation"]
+            self.normalize[var]["where"] = var_indexes
+        
+        #apply normalization to obs
+        for anorm in self.normalize:
+            n_factor = self.normalize[anorm]["max_obs_value"] / 100
+            for jjj in self.normalize[anorm]["where"]:
+                self.observations /= n_factor
+
         self.species_params={} #map to store different species params sets avoiding repetition
         self.cultivar_params={} #map to store different cultivar params sets avoiding repetition
 
@@ -98,6 +118,22 @@ class monica_adapter(object):
                             var = record["aggregation"]
                         if var not in env["events"][1]: #avoid to ask twice the same var as out
                             env["events"][1].append(var)
+            
+            #add required output for normalization (max for each var)
+            #!!!this is not effective since observations are immutable for spotpy  
+            #env["events"].append(unicode('run')) 
+            #require_max =[]           
+            #for norm_var in self.normalize:
+            #    my_var = []
+            #    MONICA_var = norm_var
+            #    if "aggregation" in self.normalize[norm_var]:
+            #        MONICA_var = str(self.normalize[norm_var]["aggregation"][0])
+            #    my_var.append(unicode(MONICA_var + "|" + norm_var))
+            #    if "aggregation" in self.normalize[norm_var]:
+            #        my_var.append(self.normalize[norm_var]["aggregation"][1])
+            #    my_var.append(unicode("MAX"))
+            #    require_max.append(my_var)
+            #env["events"].append(require_max)
                             
             position = int(exp_map["where_in_rotation"][0])
 
@@ -197,7 +233,21 @@ class monica_adapter(object):
             for k, v in ordered_out.iteritems():
                 for value in v:
                     evallist.append(float(value))
+            
+            #apply normalization to obs and sims
+            #self.norm_observations = copy.deepcopy(self.observations)
+            #for anorm in self.normalize:
+            #    n_factor = max(self.normalize[anorm]["max_obs_value"], self.normalize[anorm]["max_sim_value"])/100
+            #    for jjj in self.normalize[anorm]["where"]:
+            #        evallist[jjj] /= n_factor
+            #        self.norm_observations[jjj] = evallist[jjj]#/=n_factor
 
+            #apply normalization to sims
+            for anorm in self.normalize:
+                n_factor = self.normalize[anorm]["max_obs_value"] / 100
+                for jjj in self.normalize[anorm]["where"]:
+                    evallist[jjj] /= n_factor
+                
             return evallist
 
         #return daily outputs
@@ -219,6 +269,11 @@ class monica_adapter(object):
             if not finalrun:
                 results_rec = []
                 for res in rec_msg["data"]:
+                    #if res["origSpec"] == unicode('"run"'): #normalization
+                    #    for iii in range(len(res["results"])):
+                    #        name = str(res["outputIds"][iii]["displayName"])                        
+                    #        self.normalize[name]["max_sim_value"] = float(res["results"][iii][0])
+                    #else:
                     results_rec.append(res["results"][0][0])
                 self.out[int(rec_msg["customId"])] = results_rec
                 #print (rec_msg["customId"], results_rec)
