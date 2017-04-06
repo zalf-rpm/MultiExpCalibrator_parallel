@@ -1,7 +1,7 @@
 import json
 import sys
-sys.path.insert(0, "C:\\Users\\stella\\Documents\\GitHub\\monica\\project-files\\Win32\\Release")
-sys.path.insert(0, "C:\\Users\\stella\\Documents\\GitHub\\monica\\src\\python")
+#sys.path.insert(0, "C:\\Users\\stella\\Documents\\GitHub\\monica\\project-files\\Win32\\Release")
+#sys.path.insert(0, "C:\\Users\\stella\\Documents\\GitHub\\monica\\src\\python")
 import monica_io
 import zmq
 import csv
@@ -10,6 +10,10 @@ from datetime import date
 import collections
 import threading
 from threading import Thread
+import copy
+import sympy
+from sympy import symbols, Eq, solve
+from collections import defaultdict
 
 
 class monica_adapter(object):
@@ -110,8 +114,8 @@ class monica_adapter(object):
 
         self.context = zmq.Context()
         self.socket_producer = self.context.socket(zmq.PUSH)
-        self.socket_producer.connect("tcp://cluster2:6666")
-        #self.socket_producer.connect("tcp://localhost:6666")
+        #self.socket_producer.connect("tcp://cluster2:6666")
+        self.socket_producer.connect("tcp://localhost:6666")
 
     def run(self,args):
         return self._run(*args)
@@ -121,41 +125,47 @@ class monica_adapter(object):
         evallist = []
         self.out = {}
 
+        def seek_set_param(par, p_value, model_params):
+            p_name = par["name"]
+            array = par["array"]
+            add_index = False
+            if len(model_params[p_name]) > 1 and isinstance(model_params[p_name][1], basestring):
+                add_index = True #the param contains text (e.g., units)
+            if array.upper() == "FALSE":
+                if add_index:
+                    model_params[p_name][0] = p_value
+                else:
+                    model_params[p_name] = p_value
+            else: #param is in an array (possibly nested)
+                array = array.split("_") #nested array
+                if add_index:
+                    array = [0] + array
+                if len(array) == 1:
+                    model_params[p_name][int(array[0])] = p_value
+                elif len(array) == 2:
+                    model_params[p_name][int(array[0])][int(array[1])] = p_value
+                elif len(array) == 3:
+                    model_params[p_name][int(array[0])][int(array[1])][int(array[2])] = p_value
+                else:
+                    print "param array too nested, contact developers"
+            
+
         #set params according to spotpy sampling. Update all the species/cultivar available
-        for i in range(len(vector)):                        #loop on the vector
-            par_name = user_params[i]["name"]
-            for s in self.species_params:                   #loop on the species
-                species = self.species_params[s]
-                if par_name in species.keys():              #check for parameter existence in the dict
-                    if user_params[i]["array"].upper() == "FALSE":  #check the parameter is not part of an array   
-                        species[par_name] = vector[i]
-                    else:
-                        arr_index= user_params[i]["array"]
-                        species[par_name][int(arr_index)] = vector[i]
+        for i in range(len(user_params)):                        #loop on the user params
+            for s in self.species_params:               #loop on the species
+                if user_params[i]["name"] in self.species_params[s]:
+                    seek_set_param(user_params[i],
+                    user_params[i]["derive_function"](vector, self.species_params[s]) if "derive_function" in user_params[i] else vector[i],
+                    self.species_params[s])
                 else:
                     break                                   #break loop on species if the param is not there
             for cv in self.cultivar_params:                 #loop on the cultivars
-                cultivar = self.cultivar_params[cv]
-                if par_name in cultivar.keys():
-                    if user_params[i]["array"].upper() == "FALSE":
-                        cultivar[par_name] = vector[i]
-                    else:
-                        arr_index = user_params[i]["array"]
-                        if isinstance(cultivar[par_name][1], basestring):
-                            #q&d way to understand if parameters values are in a nested array -Tsums
-                            #a better -and more generic- solution must be found!
-                            cultivar[par_name][0][int(arr_index)] = vector[i]
-                            #for maize only (while calibrating TSUM1):
-                            #cultivar[par_name][0][2] = vector[i] * 0.290666667
-                            #cultivar[par_name][0][3] = vector[i] * 0.333333333
-                            #cultivar[par_name][0][4] = vector[i] * 0.266666666
-                            #cultivar[par_name][0][5] = vector[i] * 0.533333333
-                        else:
-                            cultivar[par_name][int(arr_index)] = vector[i]
+                if user_params[i]["name"] in self.cultivar_params[cv]:
+                    seek_set_param(user_params[i],
+                    user_params[i]["derive_function"](vector, self.cultivar_params[cv]) if "derive_function" in user_params[i] else vector[i],
+                    self.cultivar_params[cv])
                 else:
                     break
-                
-
 
         #launch parallel thread for the collector
         collector = Thread(target=self.collect_results, kwargs={'finalrun': finalrun})
@@ -196,8 +206,8 @@ class monica_adapter(object):
 
     def collect_results(self, finalrun):
         socket_collector = self.context.socket(zmq.PULL)
-        socket_collector.connect("tcp://cluster2:7777")
-        #socket_collector.connect("tcp://localhost:7777")
+        #socket_collector.connect("tcp://cluster2:7777")
+        socket_collector.connect("tcp://localhost:7777")
         received_results = 0
         leave = False
         while not leave:
@@ -243,5 +253,3 @@ class monica_adapter(object):
 
             if received_results == len(self.envs):
                 leave = True
-
-

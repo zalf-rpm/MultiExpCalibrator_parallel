@@ -15,7 +15,8 @@ class spot_setup(object):
             parname = par["name"]
             if re.search(r'\d', par["array"]): #check if par["array"] contains numbers
                 parname += "_" + par["array"] #spotpy does not allow two parameters to have the same name
-            self.params.append(spotpy.parameter.Uniform(parname, par["low"], par["high"], par["stepsize"], par["optguess"], par["minbound"], par["maxbound"]))
+            if "derive_function" not in par: #spotpy does not care about derived params
+                self.params.append(spotpy.parameter.Uniform(parname, par["low"], par["high"], par["stepsize"], par["optguess"], par["minbound"], par["maxbound"]))
         self.monica_model = MONICA_adapter.monica_adapter(exp_maps, obslist, finalrun)
 
     def parameters(self):

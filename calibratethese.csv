@@ -1,4 +1,5 @@
-name,position in array,low,high,stepsize,optguess,minbound,maxbound
-OptimumTemperatureForAssimilation,FALSE,25,31,1,29,25,31
-MinimumTemperatureForAssimilation,FALSE,6,10,1,8,4,10
-MaximumTemperatureForAssimilation,FALSE,35,42,1,38,35,42
+name,position in array,low,high,stepsize,optguess,minbound,maxbound,derived params
+StageTemperatureSum,1,300,500,1,400,300,500,
+AssimilatePartitioningCoeff,0_0,0.5,0.8,0.1,0.6,0.5,0.8,
+StageTemperatureSum,2,,,,,,,v[0]*0.29
+AssimilatePartitioningCoeff,0_1,,,,,,,1-(v[1]+p['AssimilatePartitioningCoeff'][0][2]+p['AssimilatePartitioningCoeff'][0][2])

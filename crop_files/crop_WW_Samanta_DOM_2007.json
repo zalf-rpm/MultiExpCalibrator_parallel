@@ -1,0 +1,33 @@
+  {
+    "crops": {
+        "WW": {
+            "is-winter-crop": true,
+            "cropParams": {
+                "species": ["include-from-file", "C:/Users/stella/Documents/GitHub/MultiExpCalibrator_parallel/param_files/wheat_CZ.json"],
+                "cultivar": ["include-from-file", "C:/Users/stella/Documents/GitHub/MultiExpCalibrator_parallel/param_files/winter wheat_CZ.json"]
+            },
+            "residueParams": ["include-from-file", "monica-parameters/crop-residues/wheat.json"]
+        }
+    },
+    
+    "fert-params": {
+        "urea": ["include-from-file", "monica-parameters/mineral-fertilisers/U.json"]
+    }, 
+
+    "cropRotation": [
+            {
+                "worksteps": [
+                    { "date": "2006-09-01", "type": "SetValue", "var": ["Mois", [1,4]], "value": 0.275225 },
+                    { "date": "2006-09-01", "type": "SetValue", "var": ["Mois", [5,15]], "value": 0.20186 },
+                    { "date": "2006-09-01", "type": "SetValue", "var": ["NH4", [1,4]], "value": 0.01375 },
+                    { "date": "2006-09-01", "type": "SetValue", "var": ["NH4", [5,8]], "value": 0.01125 },
+                    { "date": "2006-09-26", "type": "Sowing", "crop": ["ref", "crops", "WW"], "PlantDensity": 500 },
+                    { "date": "2007-09-03", "type": "Harvest"}
+                ]
+            }
+        ],
+
+    "CropParameters": {
+        "DEFAULT": ["include-from-file", "monica-parameters/user-parameters/hermes-crop.json"]
+    }
+}

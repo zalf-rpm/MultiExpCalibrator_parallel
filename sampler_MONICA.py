@@ -10,10 +10,14 @@ from datetime import date
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from collections import defaultdict
 
 font = {'family' : 'calibri',
     'weight' : 'normal',
     'size'   : 18}
+
+def make_lambda(excel):
+    return lambda v, p: eval(excel)
 
 def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='Date'):    
     #cnames = list(colors.cnames)
@@ -43,7 +47,9 @@ def produce_plot(experiments, variable, ylabel='Best model simulation', xlabel='
 exp_maps = []
 basepath = os.path.dirname(os.path.abspath(__file__))
 with open('crop_sim_site_MAP.csv') as exp_mapfile:
-    reader = csv.reader(exp_mapfile)
+    dialect = csv.Sniffer().sniff(exp_mapfile.read(), delimiters=';,\t')
+    exp_mapfile.seek(0)
+    reader = csv.reader(exp_mapfile, dialect)
     next(reader, None)  # skip the header
     for row in reader:
         exp_map = {}
@@ -61,7 +67,9 @@ with open('crop_sim_site_MAP.csv') as exp_mapfile:
 #read observations
 obslist = [] #for envs (outputs)
 with open('observations.csv') as obsfile:
-    reader = csv.reader(obsfile)
+    dialect = csv.Sniffer().sniff(obsfile.read(), delimiters=';,\t')
+    obsfile.seek(0)
+    reader = csv.reader(obsfile, dialect)
     next(reader, None)  # skip the header
     for row in reader:
         if row[6].upper() == "Y":
@@ -89,7 +97,9 @@ obslist = sorted(obslist, key=getKey)
 #read params to be calibrated
 params = []
 with open('calibratethese.csv') as paramscsv:
-    reader = csv.reader(paramscsv)
+    dialect = csv.Sniffer().sniff(paramscsv.read(), delimiters=';,\t')
+    paramscsv.seek(0)
+    reader = csv.reader(paramscsv, dialect)
     next(reader, None)  # skip the header
     for row in reader:
         p={}
@@ -101,10 +111,12 @@ with open('calibratethese.csv') as paramscsv:
         p["optguess"] = row[5]
         p["minbound"] = row[6]
         p["maxbound"] = row[7]
+        if len(row) == 9 and row[8] != "":
+            p["derive_function"] = make_lambda(row[8])
         params.append(p)
 
 spot_setup = spotpy_setup_MONICA.spot_setup(params, exp_maps, obslist)
-rep = 20
+rep = 10
 results = []
 
 sampler = spotpy.algorithms.sceua(spot_setup, dbname='SCEUA', dbformat='ram')
@@ -124,6 +136,10 @@ with open('optimizedparams.csv', 'wb') as outcsvfile:
         outrow.append(params[i]["name"]+arr_pos)
         outrow.append(best[i])
         writer.writerow(outrow)
+    if len(params) > len(best):
+        reminder = []
+        reminder.append("Don't forget to calculate and set derived params!")
+        writer.writerow(reminder)
     text='optimized parameters saved!'
     print(text)
 
@@ -163,7 +179,7 @@ for variable in obs_dates:
         exps[experiment]["all_dates"] = daily_out[int(experiment)]["Date"]
     produce_plot(exps,variable)
 
-    print("finished!")
+print("finished!")
 
 
 

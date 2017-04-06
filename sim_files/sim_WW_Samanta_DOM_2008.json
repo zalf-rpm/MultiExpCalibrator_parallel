@@ -1,11 +1,11 @@
 {
-	"crop.json": "crop_1.json",
-	"site.json": "site_1.json",
-	"climate.csv": "climate_padova.csv",
+	"crop.json": "",
+	"site.json": "",
+	"climate.csv": "",
 
 	"climate.csv-options": {
-		"start-date": "2011-06-28",
-		"end-date": "2014-12-31",
+		"start-date": "2007-08-31",
+		"end-date": "2008-09-12",
 
 		"no-of-climate-file-header-lines": 1,
 		"csv-separator": ",",
@@ -17,8 +17,8 @@
 	"include-file-base-path": "../",
 	
 	"output": { 
-	  "write-file?": true,
-		"file-name": "out_exp1.csv",
+	  "write-file?": false,
+		"file-name": "out.csv",
 	
 		"csv-options": {
 			"include-header-row": true,
